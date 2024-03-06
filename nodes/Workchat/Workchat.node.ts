@@ -83,9 +83,9 @@ export class Workchat implements INodeType {
 		let responseData;
 		const resource = this.getNodeParameter('resource', 0);
 		const operation = this.getNodeParameter('operation', 0);
-		const credentials = await this.getCredentials('workchatTokenApi');
-		const bearerToken = credentials.bearerToken;
-		const companyToken = credentials.companyToken;
+		// const credentials = await this.getCredentials('workchatTokenApi');
+		// const bearerToken = credentials.bearerToken;
+		// const companyToken = credentials.companyToken;
 
 		for (let i = 0; i < length; i++) {
 			try {
@@ -96,8 +96,6 @@ export class Workchat implements INodeType {
 						const options: OptionsWithUri = {
 							headers: {
 								Accept: 'application/json',
-								Authorization: bearerToken,
-								'X-WorkSuite-Company-Token': companyToken,
 							},
 							method: 'POST',
 							body: {
@@ -107,7 +105,12 @@ export class Workchat implements INodeType {
 							uri: `https://erp-amz.cloodo.com/v4/messages/send`,
 							json: true,
 						};
-						responseData = await this.helpers.request.call(this, options);
+						console.log(JSON.stringify(options, null, 2));
+						responseData = await this.helpers.requestWithAuthentication.call(
+							this,
+							'workchatTokenApi',
+							options,
+						);
 						returnData.push(responseData);
 					}
 					if (operation === 'getDetailMessage') {
@@ -115,8 +118,6 @@ export class Workchat implements INodeType {
 						const options: OptionsWithUri = {
 							headers: {
 								Accept: 'application/json',
-								Authorization: bearerToken,
-								'X-WorkSuite-Company-Token': companyToken,
 							},
 							method: 'GET',
 							uri: `https://erp-amz.cloodo.com/v4/messages/chat-message/${userId}`,
@@ -124,9 +125,10 @@ export class Workchat implements INodeType {
 						};
 						responseData = await this.helpers.requestWithAuthentication.call(
 							this,
-							'printcartTokenApi',
+							'workchatTokenApi',
 							options,
 						);
+						console.log(JSON.stringify(options, null, 2));
 						returnData.push(responseData);
 					}
 				}
@@ -135,30 +137,34 @@ export class Workchat implements INodeType {
 						const options: OptionsWithUri = {
 							headers: {
 								Accept: 'application/json',
-								Authorization: bearerToken,
-								'X-WorkSuite-Company-Token': companyToken,
 							},
 							method: 'GET',
-							uri: `https://exmple.com`,
+							uri: `https://erp-amz.cloodo.com/v4/messages/list-user-chat`,
 							json: true,
 						};
-						console.log(bearerToken);
-						console.log(companyToken);
-						responseData = await this.helpers.request.call(this, options);
+						responseData = await this.helpers.requestWithAuthentication.call(
+							this,
+							'workchatTokenApi',
+							options,
+						);
+						console.log(JSON.stringify(options, null, 2));
 						returnData.push(responseData);
 					}
 					if (operation === 'getContactList') {
 						const options: OptionsWithUri = {
 							headers: {
 								Accept: 'application/json',
-								Authorization: bearerToken,
-								'X-WorkSuite-Company-Token': companyToken,
 							},
 							method: 'GET',
 							uri: `https://erp-amz.cloodo.com/v4/messages/list-contact-chat`,
 							json: true,
 						};
-						responseData = await this.helpers.request.call(this, options);
+						responseData = await this.helpers.requestWithAuthentication.call(
+							this,
+							'workchatTokenApi',
+							options,
+						);
+						console.log(JSON.stringify(options, null, 2));
 						returnData.push(responseData);
 					}
 				}
